@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS authors (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(255) NOT NULL 
+)
+
+CREATE TABLE IF NOT EXISTS margazines (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(225) NOT NULL,
+    category VARCHAR(255)
+)
+
+CREATE TABLE IF NOT EXISTS articles (
+    id INTEGER PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT,
+    author_id INTEGET NOT NULL,
+    margazine_id INTEGER NOT NULL,
+    FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE CASCADE,
+    FOREIGN KEY (magazine_id) REFERENCES magazines(id) ON DELETE CASCADE
+) 

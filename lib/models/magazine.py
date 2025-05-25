@@ -79,6 +79,4 @@ class Magazine:
         rows = CURSOR.execute(sql, (category,)).fetchall()
         return [cls(row[1], row[2], row[0]) for row in rows]
 
-    def articles(self):
-        from lib.models.article import Article
-        return Article.find_by_magazine(self)
+   

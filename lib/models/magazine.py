@@ -78,5 +78,39 @@ class Magazine:
         """
         rows = CURSOR.execute(sql, (category,)).fetchall()
         return [cls(row[1], row[2], row[0]) for row in rows]
+    def authors(self):
+        from lib.models.author import Author
+        sql = """
+            SELECT DISTINCT authors.*
+            FROM authors
+            INNER JOIN articles
+            ON authors.id = articles.author_id
+            WHERE articles.magazine_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall
+        return [Author(row[1], row[0]) for row in rows]
+
+    def article_counted(self):
+        sql = """
+            SELECT magazines.id, magazines.name, COUNT(articles.id) AS article_count
+            FROM magazines
+            LEFT JOIN articles
+            ON margazines.id = articles.magazine_id
+            GROUP BY magazines.id, magazines.name;
+        """
+        rows = CURSOR.execute(sql).fetchall()
+        return rows
+    @classmethod
+    def magazine_with_many_authors(cls):
+        sql = """
+            SELECT magazines.id, magazines.name, magazines.category
+            FROM magazines
+            INNER JOIN articles
+            ON magazines.id = articles.magazine_id
+            GROUP BY magazines.id, magazines.name
+            HAVING COUNT(DISTINCT articles.author_id) >= 2;
+        """
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls(row[1], row[2], row[0]) for row in rows]
 
    

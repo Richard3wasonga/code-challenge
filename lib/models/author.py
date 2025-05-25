@@ -56,4 +56,39 @@ class Author:
         """
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls(row[1], row[0]) if row else None
+
+    def articles(self):
+        from lib.models.article import Article
+        sql = """
+            SELECT * FROM articles
+            WHERE author_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [Article(row[1], row[2], row[3], row[4], row[0]) for row in rows]
+
+    def magazines(self):
+        from lib.models.magazine import Magazine
+        sql = """
+            SELECT DISTICT magazines.*
+            FROM magazines
+            INNER JOIN articles
+            ON magazines.id = articles.magazine_id
+            WHERE articles.author_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [Magazine(row[1], row[2], row[0]) for row in rows]
+
+    @classmethod
+    def most_active_author(cls):
+        sql = """
+            SELECT author.id, authors.name, COUNT(articles.id) AS article_count
+            FROM authors
+            INNER JOIN articles
+            ON authors.id = articles.author_id
+            GROUP BY authors.id, authors.name
+            ORDER BY article_count DESC
+            LIMIT 1;
+        """
+        row = CURSOR.execute(sql).fetchone()
+        return cls(row[1], row[0]) if row else None
         

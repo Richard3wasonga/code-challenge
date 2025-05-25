@@ -30,7 +30,7 @@ class Article:
         return self._content
 
     @content.setter
-    def context(self, value):
+    def content(self, value):
         if len(value.strip()):
             self._content = value.strip()
         else:
@@ -66,5 +66,53 @@ class Article:
         CONN.commit()
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+
+    @classmethod
+    def find_by_id(cls, id):
+        sql = """
+            SELECT *
+            FROM articles
+            WHERE id = ?
+        """
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls(row[1], row[2], row[3], row[4], row[0]) if row else None
+
+    @classmethod
+    def find_by_title(cls, title):
+        sql = """
+            SELECT *
+            FROM articles
+            WHERE title = ?
+        """
+        rows = CURSOR.execute(sql, (title,)).fetchall()
+        return [cls(row[1], row[2], row[3], row[4], row[0]) for row in rows]
+
+    @classmethod
+    def find_by_author(cls, author_id):
+        sql = """
+            SELECT *
+            FROM articles
+            WHERE author_id = ?
+        """
+        rows = CURSOR.execute(sql, (author_id,)).fetchall()
+        return [cls(row[1], row[2], row[3], row[4], row[0]) for row in rows]
+
+    @classmethod
+    def find_by_magazine(cls, magazine_id):
+        sql = """
+            SELECT *
+            FROM articles
+            WHERE magazine_id = ?
+        """
+        rows = CURSOR.execute(sql, (magazine_id,)).fetchall()
+        return [cls(row[1], row[2], row[3], row[4], row[0]) for row in rows]
+
+    def get_author(self):
+        from lib.models.author import Author
+        return Author.find_by_id(self.author_id)
+
+    def get_margazine(self):
+        from lib.models.magazine import Magazine
+        return Magazine.find_by_id(self.magazine_id)
 
     

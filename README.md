@@ -4,7 +4,7 @@
 
 This is python application that models a publishing system with three main components:`AUthors`, `Magazines` and `Articles`.It demonstrates Object-Oriented programming (OOP) consepts such as encapsulation, relationships and data presistence via SQLITE.
 
-## **Instalatin**
+## **Installation**
 
 GITHUB REPOSITORY: [ magazine-publishing-system](https://github.com/Richard3wasonga/code-challenge)
 
@@ -516,10 +516,10 @@ class Article:
 3. Retrieve data:
 
    ```python
-  alice.articles()           # Articles by Alice
-  alice.magazines()          # Magazines Alice has contributed to
-  vogue.article_titles()     # Titles published in Vogue
-  Magazine.top_publisher()   # Most published magazine
+   alice.articles()           # Articles by Alice
+   alice.magazines()          # Magazines Alice has contributed to
+   vogue.article_titles()     # Titles published in Vogue
+   Magazine.top_publisher()   # Most published magazine
    ```
 ---
 

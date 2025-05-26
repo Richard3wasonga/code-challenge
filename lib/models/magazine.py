@@ -87,15 +87,15 @@ class Magazine:
             ON authors.id = articles.author_id
             WHERE articles.magazine_id = ?
         """
-        rows = CURSOR.execute(sql, (self.id,)).fetchall
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
         return [Author(row[1], row[0]) for row in rows]
 
-    def article_counted(self):
+    def article_counts(self):
         sql = """
             SELECT magazines.id, magazines.name, COUNT(articles.id) AS article_count
             FROM magazines
             LEFT JOIN articles
-            ON margazines.id = articles.magazine_id
+            ON magazines.id = articles.magazine_id
             GROUP BY magazines.id, magazines.name;
         """
         rows = CURSOR.execute(sql).fetchall()
@@ -107,10 +107,54 @@ class Magazine:
             FROM magazines
             INNER JOIN articles
             ON magazines.id = articles.magazine_id
-            GROUP BY magazines.id, magazines.name
+            GROUP BY magazines.id
             HAVING COUNT(DISTINCT articles.author_id) >= 2;
         """
         rows = CURSOR.execute(sql).fetchall()
         return [cls(row[1], row[2], row[0]) for row in rows]
+
+    def articles(self):
+        from lib.models.article import Article
+        sql = """
+            SELECT * FROM articles
+            WHERE magazine_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [Article(row[1], row[2], row[3], row[4], row[0]) for row in rows]
+
+    def contributors(self):
+        from lib.models.author import Author
+        sql = """
+            SELECT DISTINCT authors.*
+            FROM authors
+            INNER JOIN articles
+            ON authors.id = articles.author_id
+            WHERE articles.magazine_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [Author(row[1], row[0]) for row in rows]
+
+    def article_titles(self):
+        sql = """
+            SELECT title
+            FROM articles
+            WHERE magazine_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [row[0] for row in rows]
+
+    def contributing_authors(self):
+        from lib.models.author import Author
+        sql = """
+            SELECT authors.*, COUNT(articles.id) AS article_count
+            FROM authors
+            INNER JOIN articles
+            ON authors.id = articles.author_id
+            WHERE articles.magazine_id = ?
+            GROUP BY authors.id
+            HAVING article_count > 2
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [Author(row[1], row[0]) for row in rows]
 
    

@@ -91,4 +91,21 @@ class Author:
         """
         row = CURSOR.execute(sql).fetchone()
         return cls(row[1], row[0]) if row else None
+
+    def add_article(self, magazine, title, content="Default content"):
+        from lib.models.article import Article
+        article = Article(title, content, self.id, magazine.id)
+        article.save()
+        return article
+
+    def topic_areas(self):
+        sql = """
+            SELECT DISTINCT magazines.category
+            FROM magazines
+            INNER JOIN articles
+            ON magazines.id = articles.magazine_id
+            WHERE articles.author_id = ?
+        """
+        rows = CURSOR.execute(sql, (self.id,)).fetchall()
+        return [row[0] for row in rows]
         

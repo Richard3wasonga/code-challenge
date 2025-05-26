@@ -1,6 +1,6 @@
 # code-challenge
 
-# **Magazine-Publishing-System
+# **Magazine-Publishing-System**
 
 This is python application that models a publishing system with three main components:`AUthors`, `Magazines` and `Articles`.It demonstrates Object-Oriented programming (OOP) consepts such as encapsulation, relationships and data presistence via SQLITE.
 

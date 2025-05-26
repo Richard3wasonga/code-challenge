@@ -553,6 +553,8 @@ class Article:
 ## **Contributors**
 - Bob Oyier - [GitHub Profile](https://github.com/oyieroyier)
 
+- Titus Ouko - [GitHub Profile](https://github.com/costamay)
+
 ---
 
 ## **License**

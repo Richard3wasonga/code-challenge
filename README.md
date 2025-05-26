@@ -504,7 +504,7 @@ class Article:
 
 ## **How to use the system**
 
-1. Create customers and coffees:
+1. Create authors and magazines:
    ```python
    alice = Author.create("Alice")
    vogue = Magazine.create("Vogue", "Fashion")

@@ -157,4 +157,18 @@ class Magazine:
         rows = CURSOR.execute(sql, (self.id,)).fetchall()
         return [Author(row[1], row[0]) for row in rows]
 
+    @classmethod
+    def top_publisher(cls):
+        sql = """
+            SELECT magazines.id, magazines.name, magazines.category, COUNT(articles.id) AS article_count
+            FROM magazines
+            LEFT JOIN articles
+            ON magazines.id = articles.magazine_id
+            GROUP BY magazines.id, magazines.name, magazines.category
+            ORDER BY article_count DESC
+            LIMIT 1
+        """
+        row = CURSOR.execute(sql).fetchone()
+        return cls(row[1], row[2], row[0]) if row else None
+
    
